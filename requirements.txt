@@ -1,0 +1,5 @@
+SQLAlchemy==1.0.10
+backports-abc==0.4
+pyhocon==0.3.17
+pyparsing==2.0.3
+tornado==4.3

@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 
-import os
-from pyhocon import ConfigFactory
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
@@ -13,31 +11,25 @@ class CustomSqlalchemy:
     """Custom sqlalchemy behaves.
 
     """
-    def __init__(self, cfg=None):
-        self.cfg = cfg
+    def __init__(self, conf_obj=None):
+        """Do two things in the constructor:
+        1) create a declarative to define classes mapped to relational
+        database tables.
+        2) Receive an conf_obj to create objects engine and session.
+
+        conf_obj is an object created by
+        `pyhocon.config_parser.ConfigFactory.parse_file()`
+        """
+        self.conf = conf_obj
         self._engine = None
         self._session = None
         self.base_model = declarative_base()
 
-    def parse_cfg(self):
-        if self.cfg is None:
-            self.cfg = self.default_cfg
-
-        if not os.path.exists(self.cfg):
-            raise IOError('cfg file {0} does not exist.'.format(self.cfg))
-
-        return ConfigFactory.parse_file(self.cfg)
-
-    @property
-    def conf(self):
-        return self.parse_cfg()
-
-    @property
-    def default_cfg(self):
-        return 'default.json'
-
     @property
     def engine(self):
+        if not self.conf:
+            raise IOError('No conf object exists.')
+
         if self._engine is None:
             self._engine = create_engine(
                 self.conf.get_string('mysql.url'),
@@ -47,6 +39,9 @@ class CustomSqlalchemy:
 
     @property
     def session(self):
+        if not self.conf:
+            raise AttributeError('No conf object exists.')
+
         if self._session is None:
             session_factory = sessionmaker(
                 bind=self.engine,

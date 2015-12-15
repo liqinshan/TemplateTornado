@@ -1,11 +1,9 @@
 # -*- coding:utf-8 -*-
 
-from TemplateTornado.db.models import Test
-
 __author__ = "lqs"
 
 
-class Base:
+class CustomDB:
     def __init__(self, session):
         self.session = session
 
@@ -20,13 +18,3 @@ class Base:
         except Exception:
             self.session.rollback()
             raise
-
-
-class TestOperation(Base):
-    def query_test_obj(self, name):
-        return self.session.query(Test).filter_by(name=name).first()
-
-    def add_test_obj(self, name):
-        if not self.query_test_obj(name=name):
-            t = Test(name=name)
-            self.create(t)

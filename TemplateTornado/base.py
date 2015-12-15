@@ -3,9 +3,10 @@
 import traceback
 import logging
 import json
+
 from tornado import web
-from TemplateTornado.erros import CustomException, MissingArgumentsError
-from TemplateTornado.db.models import db
+from TemplateTornado.errors import CustomException, MissingArgumentsError
+from TemplateTornado import db
 
 __author__ = "lqs"
 
@@ -18,7 +19,7 @@ def to_str(obj):
     return obj
 
 
-class BaseHandler(web.RequestHandler):
+class CustomBase(web.RequestHandler):
     def options(self, *args, **kwargs):
         """Rewrite the method to support CORS.
 
