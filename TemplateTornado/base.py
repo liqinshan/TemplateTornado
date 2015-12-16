@@ -6,7 +6,6 @@ import json
 
 from tornado import web
 from TemplateTornado.errors import CustomException, MissingArgumentsError
-from TemplateTornado import db
 
 __author__ = "lqs"
 
@@ -97,10 +96,3 @@ class CustomBase(web.RequestHandler):
             raise MissingArgumentsError('Missing query arguments.')
 
         return {k: to_str(v[0]) for k, v in self.request.arguments.items()}
-
-    @property
-    def session(self):
-        return db.session
-
-    def on_finish(self):
-        db.close()

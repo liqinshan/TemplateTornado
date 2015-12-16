@@ -1,0 +1,25 @@
+{
+  "application": {
+    "bind": "0.0.0.0",
+    "port": 8000,
+    "app_env": "dev",
+    "app_options": {
+      "autoreload": false,
+      "xsrf_cookie": true,
+      "cookie_secret": "hs2W5IT7cnMmYibT5JgsstVrojJJZohVqciQxipZopw"
+    }
+  },
+
+  "mysql": {
+    "url": "mysql+pymysql://db_user:db_password@10.2.24.8/test_db?charset=utf8",
+    "session_options": {
+      "autoflush": true,
+      "autocommit": false,
+    },
+    "engine_options": {
+      "pool_recycle": 3600,
+      "convert_unicode": true,
+      "echo": true
+    }
+  }
+}
