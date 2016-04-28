@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
 
 import logging
+
+from tornado import options
 from tornado.ioloop import IOLoop
 from tornado.web import Application
-from tornado import options
-from TemplateTornado.utils.util import parse_cfg
+
 from TemplateTornado.basedb.customsqlalchemy import CustomSqlalchemy
+from TemplateTornado.util import parse_cfg
 
 __author__ = "lqs"
 
