@@ -5,20 +5,15 @@ import logging
 import json
 
 from tornado import web
-from TemplateTornado.errors import CustomException, MissingArgumentsError
+from TemplateTornado.customerrors import CustomException, MissingArgumentsError
+from TemplateTornado.util import to_str
 
 __author__ = "lqs"
 
 logger = logging.getLogger(__name__)
 
 
-def to_str(obj):
-    if isinstance(obj, bytes):
-        return obj.decode()
-    return obj
-
-
-class CustomBase(web.RequestHandler):
+class Base(web.RequestHandler):
     def options(self, *args, **kwargs):
         """Rewrite the method to support CORS.
 
@@ -51,8 +46,7 @@ class CustomBase(web.RequestHandler):
                 self.write(line)
             self.finish()
         else:
-            self.finish({'code': status_code,
-                         'message': message or self._reason})
+            self.finish({'code': status_code, 'message': message or self._reason})
 
     def _handle_request_exception(self, e):
         """Rewrite the method to enable the ability to handle the custom
@@ -82,7 +76,6 @@ class CustomBase(web.RequestHandler):
         content_type = self.request.headers.get('Content-Type')
         if content_type and content_type.startswith('application/json'):
             data = json.loads(to_str(self.request.body))
-
             return {k: v for k, v in data.items()}
 
     def parse_query(self):
@@ -94,5 +87,4 @@ class CustomBase(web.RequestHandler):
         if not self.request.arguments:
             logger.warning('The are no arguments coming with the request.')
             raise MissingArgumentsError('Missing query arguments.')
-
         return {k: to_str(v[0]) for k, v in self.request.arguments.items()}
